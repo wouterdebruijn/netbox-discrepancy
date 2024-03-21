@@ -14,6 +14,9 @@ class DiscrepancyType(NetBoxModel):
   
   def get_absolute_url(self):
     return reverse('plugins:netbox_discrepancy:discrepancytype', args=[str(self.pk)])
+  
+  class Meta:
+    verbose_name_plural = 'discrepancy types'
 
 class Discrepancy(NetBoxModel):
   # Check if to=device works, or if it needs to be 'dcim.Device'
@@ -29,4 +32,7 @@ class Discrepancy(NetBoxModel):
   
   def get_absolute_url(self):
     return reverse('plugins:netbox_discrepancy:discrepancy', args=[str(self.pk)])
+  
+  class Meta:
+    verbose_name_plural = 'discrepancies'
  
