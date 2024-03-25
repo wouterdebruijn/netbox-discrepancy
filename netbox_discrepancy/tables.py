@@ -4,13 +4,18 @@ from netbox.tables import NetBoxTable, ChoiceFieldColumn
 from .models import Discrepancy, DiscrepancyType
 
 class DiscrepancyTypeTable(NetBoxTable):
+  name = tables.LinkColumn()
+
   class Meta(NetBoxTable.Meta):
     model = DiscrepancyType
-    fields = ('name', 'description', 'tags')
-    columns = ('name', 'description', 'tags')
+    fields = ('name', 'description')
+    columns = ('name', 'description')
 
 class DiscrepancyTable(NetBoxTable):
+  device = tables.LinkColumn()
+  type = ChoiceFieldColumn()
+  
   class Meta(NetBoxTable.Meta):
     model = Discrepancy
-    fields = ('device', 'type', 'message', 'tags')
-    columns = ('device', 'type', 'message', 'tags')
+    fields = ('id', 'device', 'type', 'message')
+    columns = ('id', 'device', 'type', 'message')
