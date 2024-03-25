@@ -7,7 +7,6 @@ from django.urls import reverse
 class DiscrepancyType(NetBoxModel):
   name = models.CharField(max_length=50)
   description = models.TextField(blank=True, null=True)
-  tags = ArrayField(models.CharField(max_length=50), default=list)
   
   def __str__(self):
     return self.name
@@ -24,7 +23,6 @@ class Discrepancy(NetBoxModel):
   type = models.ForeignKey(to=DiscrepancyType, on_delete=models.CASCADE)
   
   message = models.TextField()
-  tags = ArrayField(models.CharField(max_length=50), default=list)
 
   def __str__(self):
     # Return message limited to 16
