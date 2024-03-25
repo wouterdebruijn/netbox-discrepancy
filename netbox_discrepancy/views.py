@@ -40,7 +40,7 @@ class DeviceDiscrepancyView(generic.ObjectChildrenView):
   table = tables.DiscrepancyTable
   template_name = 'generic/object_children.html'
   tab = ViewTab(
-    label='Discrepancy',
+    label='Discrepancies',
     badge=lambda obj: models.Discrepancy.objects.filter(device=obj).count(),
   )
 
