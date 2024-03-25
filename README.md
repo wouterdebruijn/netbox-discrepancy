@@ -4,6 +4,11 @@ This plugin is designed to compare the data in Netbox with the data in the real
 world. It will compare the data in Netbox with the data in the real world and
 report any discrepancies.
 
+## Features
+
+- 🗃️ Report discrepancies for Netbox devices
+- 🔄 Compare real world data to Netbox
+
 ## Installation
 
 ```bash
