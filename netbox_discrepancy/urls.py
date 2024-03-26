@@ -4,6 +4,10 @@ from netbox.views.generic import ObjectChangeLogView
 
 urlpatterns = [
     path(
+        'overview',
+        views.DiscrepancyOverview.as_view(),
+        name='overview'),
+    path(
         'discrepancy/',
         views.DiscrepancyListView.as_view(),
         name='discrepancy_list'),

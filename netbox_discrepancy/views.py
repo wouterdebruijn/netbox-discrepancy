@@ -1,8 +1,13 @@
-from django.shortcuts import redirect
 from netbox.views import generic
 from . import forms, models, tables, filtersets
 from dcim.models import Device
 from utilities.views import ViewTab, register_model_view
+from django.views.generic import View
+from django.shortcuts import render
+from django_tables2.columns import LinkColumn
+
+from core.models import Job
+from core.tables import JobTable
 
 # DiscrepancyType
 
@@ -64,3 +69,23 @@ class DeviceDiscrepancyView(generic.ObjectChildrenView):
 
     def get_children(self, request, parent):
         return models.Discrepancy.objects.filter(device=parent.pk)
+
+
+class DiscrepancyOverview(View):
+    def get(self, request):
+
+        class CustomTable(JobTable):
+            job_id = LinkColumn()
+
+            class Meta(JobTable.Meta):
+                default_columns = ('status', 'created',
+                                   'completed', 'scheduled', 'job_id')
+
+        jobs = Job.objects.filter(name="Synchronize discrepancies").all()
+        job_table = CustomTable(jobs)
+
+        job_table
+
+        return render(request, 'netbox_discrepancy/overview.html', {
+            'job_table': job_table,
+        })
