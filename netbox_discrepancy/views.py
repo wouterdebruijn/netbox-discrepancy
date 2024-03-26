@@ -83,8 +83,7 @@ class DiscrepancyOverview(View):
 
         jobs = Job.objects.filter(name="Synchronize discrepancies").all()
         job_table = CustomTable(jobs)
-
-        job_table
+        job_table.configure(request)
 
         return render(request, 'netbox_discrepancy/overview.html', {
             'job_table': job_table,
