@@ -33,8 +33,9 @@ def sync_discrepancies(job: Job, *args, **kwargs):
         if job.interval and not Job.objects.filter(
             name="Synchronize discrepancies",
             status__in=ENQUEUED_STATUS,
-            scheduled__gt=datetime.now(
-                timezone.utc)).exists():
+            scheduled__gt=datetime.now(timezone.utc)
+        ).exists():
+
             new_scheduled_time = job.scheduled + \
                 timedelta(minutes=job.interval)
             job.enqueue(
