@@ -26,12 +26,14 @@ class NetboxDiscrepancy(PluginConfig):
         ).exists():
             return
 
+        print("Enqueuing job")
+
         Job.enqueue(
             sync_discrepancies,
             instance=Discrepancy.objects.first(),
             name="Synchronize discrepancies",
             user=None,
-            interval=5,
+            interval=60,
             schedule_at=datetime.now(timezone.utc),
         )
 
