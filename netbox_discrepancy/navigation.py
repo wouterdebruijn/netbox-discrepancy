@@ -4,7 +4,7 @@ menu_items = (
     PluginMenuItem(
         link="plugins:netbox_discrepancy:overview",
         link_text="Overview",
-        permissions=["netbox_discrepancy.overview"]
+        permissions=["netbox_discrepancy.discrepancy_list"]
     ),
     PluginMenuItem(
         link="plugins:netbox_discrepancy:discrepancy_list",
