@@ -8,6 +8,7 @@ from django_tables2.columns import LinkColumn
 
 from core.models import Job
 from core.tables import JobTable
+from django_rq import get_queue
 
 # DiscrepancyType
 
@@ -85,6 +86,9 @@ class DiscrepancyOverview(View):
         job_table = CustomTable(jobs)
         job_table.configure(request)
 
+        queue = get_queue()
+
         return render(request, 'netbox_discrepancy/overview.html', {
             'job_table': job_table,
+            'job_count': len(queue.jobs)
         })
