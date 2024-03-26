@@ -22,7 +22,6 @@ class NetboxDiscrepancy(PluginConfig):
         if Job.objects.filter(
             name="Synchronize discrepancies",
             status__in=ENQUEUED_STATUS,
-            scheduled__gt=datetime.now(timezone.utc),
         ).exists():
             return
 
