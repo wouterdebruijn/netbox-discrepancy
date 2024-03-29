@@ -1,0 +1,41 @@
+version: '3.4'
+services:
+  postgres:
+    image: docker.io/postgres:16-alpine
+    env_file: env/postgres.env
+    volumes:
+    - netbox-postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: docker.io/redis:7-alpine
+    ports:
+      - "6379:6379"
+    command:
+    - sh
+    - -c # this is to evaluate the $REDIS_PASSWORD from the env
+    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    env_file: env/redis.env
+    volumes:
+    - netbox-redis-data:/data
+
+  redis-cache:
+    image: docker.io/redis:7-alpine
+    ports:
+      - "6380:6379"
+    command:
+    - sh
+    - -c # this is to evaluate the $REDIS_PASSWORD from the env
+    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    env_file: env/redis-cache.env
+    volumes:
+    - netbox-redis-cache-data:/data
+
+volumes:
+  netbox-postgres-data:
+    driver: local
+  netbox-redis-cache-data:
+    driver: local
+  netbox-redis-data:
+    driver: local

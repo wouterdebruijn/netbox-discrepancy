@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import sys
 from extras.plugins import PluginConfig
 
 # Job Enqueue
@@ -15,9 +16,13 @@ class NetboxDiscrepancy(PluginConfig):
     def ready(self):
         super().ready()
 
+        # Check if we are starting django
+        if 'runserver' not in sys.argv:
+            return
+
         from core.models import Job
-        from .models import Discrepancy
         from .jobs import sync_discrepancies, ENQUEUED_STATUS
+        from dcim.models import Device
 
         if Job.objects.filter(
             name="Synchronize discrepancies",
@@ -27,9 +32,13 @@ class NetboxDiscrepancy(PluginConfig):
 
         print("Enqueuing job")
 
+        if Device.objects.count() == 0:
+            print("No devices to sync")
+            return
+
         Job.enqueue(
             sync_discrepancies,
-            instance=Discrepancy.objects.first(),
+            instance=Device.objects.first(),
             name="Synchronize discrepancies",
             user=None,
             interval=60,

@@ -17,9 +17,20 @@ report any discrepancies.
 
 ## Development Information
 
+As part of the plugin repository, the development folder contains a full netbox
+development environment. This environment is partly dockerized for ease of use.
+
 ```bash
-# Add the netbox directory to the python path
-echo ~/Documents/Netbox/netbox/netbox > venv/lib/python3.12/site-packages/netbox.pth
+# Change directory to the development folder
+cd development
+
+# Start required services
+docker-compose up -d
+
+# Make any required changes in the configuration.py file. This will be copied to the netbox configuration folder on setup.
+
+# Run initial setup
+bash setup.sh
 ```
 
 ```bash
