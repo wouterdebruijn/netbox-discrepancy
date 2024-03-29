@@ -21,3 +21,8 @@ report any discrepancies.
 # Add the netbox directory to the python path
 echo ~/Documents/Netbox/netbox/netbox > venv/lib/python3.12/site-packages/netbox.pth
 ```
+
+```bash
+# Run tests for this plugin
+python3 netbox/netbox/manage.py test netbox_discrepancy.tests --keepdb --parallel 4
+```
