@@ -24,11 +24,15 @@ class NetboxDiscrepancy(PluginConfig):
         from .jobs import sync_discrepancies, ENQUEUED_STATUS
         from dcim.models import Device
 
-        if Job.objects.filter(
+        query = Job.objects.filter(
             name="Synchronize discrepancies",
             status__in=ENQUEUED_STATUS,
-        ).exists():
-            return
+        )
+
+        # Delete and unschedule any existing jobs
+        if query.exists():
+            for job in query:
+                job.delete()
 
         print("Enqueuing job")
 
