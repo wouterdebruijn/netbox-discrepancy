@@ -30,6 +30,12 @@ class DiscrepancyTypeEditView(generic.ObjectEditView):
 class DiscrepancyTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.DiscrepancyType.objects.all()
 
+
+class DiscrepancyTypeBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.DiscrepancyType.objects.all()
+    table = tables.DiscrepancyTypeTable
+    filterset = filtersets.DiscrepancyTypeFilterSet
+
 # Discrepancy
 
 
@@ -51,6 +57,12 @@ class DiscrepancyEditView(generic.ObjectEditView):
 
 class DiscrepancyDeleteView(generic.ObjectDeleteView):
     queryset = models.Discrepancy.objects.all()
+
+
+class DiscrepancyBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.Discrepancy.objects.all()
+    table = tables.DiscrepancyTable
+    filterset = filtersets.DiscrepancyFilterSet
 
 
 @register_model_view(Device, name="discrepancy", )

@@ -28,6 +28,10 @@ urlpatterns = [
         views.DiscrepancyDeleteView.as_view(),
         name='discrepancy_delete'),
     path(
+        'discrepancy/delete/',
+        views.DiscrepancyBulkDeleteView.as_view(),
+        name='discrepancy_bulk_delete'),
+    path(
         'discrepancytype/',
         views.DiscrepancyTypeListView.as_view(),
         name='discrepancytype_list'),
@@ -47,6 +51,10 @@ urlpatterns = [
         'discrepancytype/<int:pk>/delete/',
         views.DiscrepancyTypeDeleteView.as_view(),
         name='discrepancytype_delete'),
+    path(
+        'discrepancytype/delete/',
+        views.DiscrepancyTypeBulkDeleteView.as_view(),
+        name='discrepancytype_bulk_delete'),
     path(
         'discrepancy/<int:pk>/changelog/',
         ObjectChangeLogView.as_view(),
