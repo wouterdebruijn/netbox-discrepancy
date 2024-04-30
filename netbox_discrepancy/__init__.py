@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import sys
 from extras.plugins import PluginConfig
 
@@ -46,7 +46,8 @@ class NetboxDiscrepancy(PluginConfig):
             name="Synchronize discrepancies",
             user=None,
             interval=60,
-            schedule_at=datetime.now(timezone.utc),
+            schedule_at=datetime.now(timezone.utc) + timedelta(seconds=10),
+            timeout=3600,
         )
 
 
