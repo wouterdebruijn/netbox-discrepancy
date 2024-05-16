@@ -53,6 +53,45 @@ def sync_discrepancies(job: Job, *args, **kwargs):
                     details = connection.get(
                         f"devices/{ng_device['id']}/").json()
 
+                    # Check device model
+                    if details['model'] != nb_device.device_type.model:
+                        [item, created] = DiscrepancyType.objects.get_or_create(
+                            name="Model not in NetBox"
+                        )
+
+                        Discrepancy.objects.get_or_create(
+                            device=nb_device,
+                            type=item,
+                            message=f"Model {
+                                details['model']} not found in NetBox"
+                        )
+
+                    # Check device vendor
+                    if details['manufacturer'] != nb_device.device_type.manufacturer.name:
+                        [item, created] = DiscrepancyType.objects.get_or_create(
+                            name="Vendor not in NetBox"
+                        )
+
+                        Discrepancy.objects.get_or_create(
+                            device=nb_device,
+                            type=item,
+                            message=f"Vendor {
+                                details['manufacturer']} not found in NetBox"
+                        )
+
+                    # Check serial number
+                    if details['context']['serial_number'] != nb_device.serial:
+                        [item, created] = DiscrepancyType.objects.get_or_create(
+                            name="Serial number not in NetBox"
+                        )
+
+                        Discrepancy.objects.get_or_create(
+                            device=nb_device,
+                            type=item,
+                            message=f"Serial number {
+                                details['context']['serial_number']} not found in NetBox"
+                        )
+
                     interfaces = details['interfaces']
 
                     for interface in interfaces:
