@@ -13,13 +13,69 @@
 {% block content-wrapper %}
 {% block content %}
 
+<script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
+
 <div class="m-3">
   <div class="card">
     <div class="card-header">
       <h3 class="card-title">Discrepancies</h3>
     </div>
-    <div class="card-body">
-      <p>View and manage discrepancies between NetBox and other systems. Current queue length: {{ job_count }}</p>
+    <div class="card-body position-relative">
+      <div class="p-1 m-2y border rounded bg-darkgray" style="min-height: 100px; max-height: 300px; overflow-y: scroll;" id="stout"></div>
+
+      <form hx-post="http://nc-hlm-dev001.intra.netco.nl:8080/discovery/" id="form" class="my-2" hx-swap="outerHTML" hx-target="#post-response">
+        <input type="text" class="form-control" name="ipv4" id="ipv4" placeholder="192.168.1.1">
+        <input class="btn btn-primary my-2" type="submit"></input>
+      </form>
+
+      <button class="btn btn-sm btn-outline-secondary" style="position: absolute; right: 15px; bottom: 15px;" id="refetch">Refetch</button>
+
+      <div class="mb-3 mt-2" style="max-height: 100px; overflow-y: scroll;" id="post-response"></div>
+
+      <script>
+        async function fetchStream(event) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+          const stream = await fetch('http://nc-hlm-dev001.intra.netco.nl:8080/discovery/', {
+            method: 'GET',
+          });
+
+          for await (const chunk of stream.body) {
+            text_chunk = String.fromCharCode.apply(null, new Uint8Array(chunk));
+
+            // Check if line contains text and isn't just a newline
+            if (!text_chunk.replace(/\n/g, '').length > 0) {
+              continue;
+            }
+
+            text = document.getElementById('stout').innerHTML + String.fromCharCode.apply(null, new Uint8Array(chunk));
+
+            // New lines
+            text = text.replace(/\n/g, '<br />');
+
+            // Format shell colors and new lines to HTML
+            text = text.replace(/\[1;0m/g, '</span>');
+
+            text = text.replace(/\[1;32m/g, '<span style="color: green;">');
+            text = text.replace(/\[1;31m/g, '<span style="color: red;">');
+            text = text.replace(/\[1;33m/g, '<span style="color: yellow;">');
+            text = text.replace(/\[1;34m/g, '<span style="color: blue;">');
+            text = text.replace(/\[1;35m/g, '<span style="color: purple;">');
+            text = text.replace(/\[1;36m/g, '<span style="color: cyan;">');
+            text = text.replace(/\[1;37m/g, '<span style="color: white;">');
+
+            document.getElementById('stout').innerHTML = text;
+
+            // Scroll to bottom
+            document.getElementById('stout').scrollTo(0, document.getElementById('stout').scrollHeight);
+          }
+
+        }
+
+        document.getElementById('form').addEventListener('submit', fetchStream);
+        document.getElementById('refetch').addEventListener('click', fetchStream);
+      </script>
+
+      <p class="mt-2">View and manage discrepancies between NetBox and other systems. Current queue length: {{ job_count }}</p>
     </div>
   </div>
 
