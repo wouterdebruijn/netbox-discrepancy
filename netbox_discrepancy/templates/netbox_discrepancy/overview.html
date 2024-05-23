@@ -34,7 +34,7 @@
 
       <script>
         async function fetchStream(event) {
-          await new Promise(resolve => setTimeout(resolve, 200));
+          await new Promise(resolve => setTimeout(resolve, 1000));
           const stream = await fetch('http://nc-hlm-dev001.intra.netco.nl:8080/discovery/', {
             method: 'GET',
           });
