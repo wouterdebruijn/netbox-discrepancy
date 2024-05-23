@@ -1,3 +1,5 @@
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from netbox.views import generic
 from . import forms, models, tables, filtersets
 from dcim.models import Device
@@ -9,6 +11,7 @@ from django_tables2.columns import LinkColumn
 from core.models import Job
 from core.tables import JobTable
 from django_rq import get_queue
+from datetime import datetime, timedelta, timezone
 
 # DiscrepancyType
 
@@ -104,3 +107,35 @@ class DiscrepancyOverview(View):
             'job_table': job_table,
             'job_count': len(queue.jobs)
         })
+
+    def post(self, request):
+
+        from core.models import Job
+        from .jobs import sync_discrepancies, ENQUEUED_STATUS
+        from dcim.models import Device
+
+        query = Job.objects.filter(
+            name="Synchronize discrepancies",
+            status__in=ENQUEUED_STATUS,
+        )
+
+        # Delete and unschedule any existing jobs
+        if query.exists():
+            for job in query:
+                job.delete()
+
+        if Device.objects.count() == 0:
+            print("No devices to sync")
+            return
+
+        Job.enqueue(
+            sync_discrepancies,
+            instance=Device.objects.first(),
+            name="Synchronize discrepancies",
+            user=None,
+            interval=60,
+            schedule_at=datetime.now(timezone.utc) + timedelta(seconds=10),
+            timeout=3600,
+        )
+
+        return HttpResponseRedirect(reverse("plugins:netbox_discrepancy:overview"))
